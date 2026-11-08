@@ -1,56 +1,726 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#090b14"><title>BigSmall Predictor</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10121b">
+  <title>Number Predictor</title>
   <style>
-    :root{color-scheme:dark;--bg:#090b14;--panel:#121521;--line:#272b40;--muted:#969bb2;--purple:#8b5cf6;--cyan:#52d3d8;font-family:Inter,ui-sans-serif,system-ui,sans-serif}
-    *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 70% -10%,rgba(139,92,246,.18),transparent 35%),var(--bg);color:#f7f8ff}button,input{font:inherit}
-    .nav{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 max(24px,6vw);border-bottom:1px solid rgba(255,255,255,.07)}
-    .brand{font-weight:850;letter-spacing:-.03em}.brand span{color:#a78bfa}.nav-actions{display:flex;gap:10px}
-    button{min-height:42px;padding:0 16px;border:1px solid var(--line);border-radius:11px;background:#191c2b;color:white;font-weight:750;cursor:pointer}
-    .primary{border:0;background:linear-gradient(115deg,#7655ef,#a66df0);box-shadow:0 12px 35px rgba(118,85,239,.22)}
-    .hero{min-height:520px;display:grid;place-items:center;text-align:center;padding:70px 20px}.hero-inner{max-width:780px}
-    .eyebrow{color:#bba8ff;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
-    h1{margin:18px 0;font-size:clamp(48px,8vw,86px);line-height:.96;letter-spacing:-.055em}.gradient{background:linear-gradient(120deg,#fff,#aaa3ff 45%,#67dbe2);background-clip:text;color:transparent}
-    .hero p{max-width:650px;margin:20px auto 28px;color:#aaafc5;font-size:18px;line-height:1.7}.features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1050px;margin:0 auto 80px;padding:0 20px}
-    .feature,.modal,.app-panel{border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,rgba(25,28,43,.94),rgba(15,17,29,.94));box-shadow:0 24px 80px rgba(0,0,0,.22)}
-    .feature{padding:24px;color:#aeb2c7}.feature h3{color:white;margin-top:0}
-    .modal-wrap{position:fixed;inset:0;display:none;place-items:center;padding:20px;background:rgba(3,4,10,.78);backdrop-filter:blur(12px)}.modal-wrap.open{display:grid}
-    .modal{width:min(100%,430px);padding:26px}.modal h2{margin-top:0}.field{margin-top:14px}label{display:block;margin-bottom:7px;font-size:13px;font-weight:700;color:#d7d9e8}
-    input{width:100%;height:44px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:#0c0e18;color:white;outline:none}.modal .primary{width:100%;margin-top:18px}
-    .tabs{display:grid;grid-template-columns:1fr 1fr;margin-bottom:18px}.tabs button.active{border-color:#8b5cf6;background:rgba(139,92,246,.13)}.message{min-height:20px;color:#fda4af;font-size:13px;margin-top:12px}
-    .app{display:none;max-width:900px;margin:0 auto;padding:28px 20px}.app.visible{display:block}.app-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px}
-    .app-panel{padding:24px;margin-top:16px}.app-panel p{color:var(--muted)}textarea{width:100%;min-height:95px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#0c0e18;color:white;font:inherit;resize:vertical}
-    .actions{display:flex;gap:10px;margin-top:12px}.results{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}.candidate{padding:18px;border:1px solid var(--line);border-radius:12px;text-align:center}.candidate strong{font-size:36px;color:#c4b5fd}
-    .history{margin-top:12px}.history-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);color:var(--muted)}
-    @media(max-width:700px){.features{grid-template-columns:1fr}.hero{min-height:480px}.actions{flex-direction:column}.results{grid-template-columns:1fr}.nav{padding:0 16px}.nav-actions button{padding:0 12px}}
+    :root {
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #10121b;
+      color: #f5f6fc;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      --muted: #989bad;
+      --line: #2a2d3b;
+      --panel: #191c28;
+      --purple: #a78bfa;
+    }
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 48px 20px;
+      background:
+        radial-gradient(ellipse at 50% -15%, rgba(124, 91, 245, .2), transparent 48%),
+        #10121b;
+    }
+    main { width: min(100%, 680px); margin: 0 auto; }
+    header { margin-bottom: 28px; text-align: center; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #c4b5fd;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { width: 7px; height: 7px; border-radius: 50%; background: #a78bfa; content: ""; }
+    h1 { margin: 12px 0 8px; font-size: clamp(32px, 7vw, 48px); letter-spacing: -.045em; }
+    header p { margin: 0; color: var(--muted); font-size: 15px; }
+    .panel {
+      margin-top: 16px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(25, 28, 40, .94);
+      box-shadow: 0 20px 70px rgba(0, 0, 0, .2);
+    }
+    .section-title { margin: 0 0 7px; font-size: 16px; }
+    .help { margin: 0 0 16px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+    label { display: block; margin-bottom: 8px; color: #d9dbea; font-size: 13px; font-weight: 650; }
+    textarea, input {
+      width: 100%;
+      border: 1px solid #343747;
+      border-radius: 10px;
+      outline: none;
+      background: #12141e;
+      color: #f5f6fc;
+      font: inherit;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    textarea { min-height: 90px; padding: 13px 14px; resize: vertical; }
+    input { height: 44px; padding: 0 12px; }
+    textarea:focus, input:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(167, 139, 250, .13); }
+    .button-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+    .number-pad { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+    .number-pad button { min-height: 42px; padding: 0; font-size: 16px; }
+    button {
+      min-height: 42px;
+      padding: 0 15px;
+      border: 1px solid #383b4b;
+      border-radius: 10px;
+      background: #222534;
+      color: #f5f6fc;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .15s, border-color .15s, background .15s;
+    }
+    button:hover { border-color: #77708e; background: #2a2d3e; }
+    button:active { transform: translateY(1px); }
+    .primary {
+      min-height: 48px;
+      flex: 1 1 200px;
+      border-color: transparent;
+      background: linear-gradient(100deg, #7c5cf5, #a56af5);
+      color: white;
+      font-size: 14px;
+    }
+    .primary:hover { border-color: transparent; background: linear-gradient(100deg, #896df7, #b17af7); }
+    .danger { color: #b9bbca; }
+    .error { min-height: 18px; margin: 10px 0 0; color: #fca5a5; font-size: 13px; }
+    .result { display: none; margin-top: 16px; padding: 24px; text-align: center; }
+    .result.visible { display: block; }
+    .result-label { color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    .candidate-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 18px 0; }
+    .candidate { display: grid; justify-items: center; gap: 5px; padding: 14px 8px; border: 1px solid #343747; border-radius: 12px; background: #12141e; }
+    .candidate:first-child { border-color: rgba(167, 139, 250, .65); background: rgba(124, 92, 245, .12); }
+    .candidate-rank, .candidate-score { color: var(--muted); font-size: 11px; }
+    .candidate strong { color: #c4b5fd; font-size: 34px; line-height: 1.1; }
+    .legacy-settings { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .legacy-settings small { display: block; margin-top: 6px; color: var(--muted); font-size: 11px; }
+    .legacy-result-number { margin: 8px 0; font-size: clamp(54px, 12vw, 76px); font-weight: 850; line-height: 1; }
+    .legacy-answer { margin: 8px 0; font-size: 24px; font-weight: 850; }
+    .legacy-answer.big { color: #ffad5a; }
+    .legacy-answer.small { color: #76aef8; }
+    .color-heading { margin: 18px 0 0; color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    .color-tags { display: flex; justify-content: center; gap: 8px; margin: 10px 0 14px; }
+    .color-tag { min-width: 78px; padding: 9px 14px; border-radius: 99px; color: #11131a; font-size: 14px; font-weight: 850; }
+    .color-tag.red { background: #ff555f; }
+    .color-tag.green { background: #31c475; }
+    .color-tag.violet { background: #c266fa; }
+    .history-stats { margin-top: 12px; padding: 12px; border-radius: 9px; background: #12141e; color: #c6c8d6; font-size: 13px; line-height: 1.6; }
+    .formula-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+    .formula-card { padding: 16px; border: 1px solid #343747; border-radius: 12px; background: #12141e; }
+    .formula-card h3 { margin: 0 0 10px; font-size: 14px; }
+    .formula-display { margin: 12px 0; color: #c4b5fd; font-family: ui-serif, Georgia, serif; font-size: clamp(21px, 4vw, 27px); text-align: center; }
+    .formula-card p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .result-meta { margin: 0; color: var(--muted); font-size: 13px; }
+    .formula { margin-top: 17px; padding: 12px; border-radius: 9px; background: #12141e; color: #c6c8d6; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; overflow-wrap: anywhere; }
+    .notice {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border: 1px solid rgba(251, 191, 36, .22);
+      border-radius: 12px;
+      background: rgba(251, 191, 36, .055);
+      color: #d7c99e;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .notice strong { color: #f5d98d; }
+    [hidden] { display: none !important; }
+    .auth-screen {
+      width: min(100%, 430px);
+      margin: 8vh auto;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(25, 28, 40, .97);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, .32);
+    }
+    .auth-screen h1 { margin-bottom: 8px; font-size: 34px; text-align: center; }
+    .auth-screen > p { margin: 0 0 22px; color: var(--muted); text-align: center; }
+    .auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 18px; }
+    .auth-tabs button.active { border-color: var(--purple); background: rgba(167, 139, 250, .14); }
+    .field { margin-top: 13px; }
+    .auth-message { min-height: 20px; margin-top: 12px; color: #fca5a5; font-size: 13px; text-align: center; }
+    .demo-note { margin-top: 18px; color: #d7c99e; font-size: 11px; line-height: 1.5; text-align: center; }
+    .account-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+    .account-info { min-width: 0; color: var(--muted); font-size: 12px; }
+    .account-info strong { color: #e9eaf3; }
+    .account-actions { display: flex; gap: 8px; }
+    .admin-screen { width: min(100%, 980px); margin: 30px auto; }
+    .admin-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+    .stat { padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+    .stat strong { display: block; margin-top: 5px; font-size: 28px; }
+    .user-table { width: 100%; margin-top: 16px; border-collapse: collapse; font-size: 13px; }
+    .user-table th, .user-table td { padding: 12px 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+    .user-table th { color: var(--muted); font-size: 11px; text-transform: uppercase; }
+    .user-table input[type="date"] { min-width: 145px; }
+    .status { display: inline-block; padding: 4px 8px; border-radius: 99px; font-size: 11px; font-weight: 800; }
+    .status-active { background: rgba(49, 196, 117, .14); color: #6ee7a1; }
+    .status-disabled { background: rgba(248, 113, 113, .14); color: #fca5a5; }
+    .status-expired { background: rgba(251, 191, 36, .14); color: #fcd34d; }
+    .table-wrap { overflow-x: auto; }
+    @media (max-width: 520px) {
+      body { padding: 32px 14px; }
+      .panel { padding: 19px; }
+      .button-row button { flex: 1 1 auto; }
+      .candidate-list { gap: 7px; }
+      .candidate { padding: 12px 4px; }
+      .legacy-settings { gap: 8px; }
+      .legacy-settings label { font-size: 12px; }
+      .formula-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
-  <nav class="nav" id="public-nav"><div class="brand">BIG<span>SMALL</span> <small>PREMIUM</small></div><div class="nav-actions"><button id="login-button">Login</button><button class="primary" id="signup-button">Get access</button></div></nav>
-  <section class="hero" id="landing"><div class="hero-inner"><div class="eyebrow">Pattern intelligence platform</div><h1>Turn past results into <span class="gradient">clear insight.</span></h1><p>A secure SaaS workspace for organized history analysis, statistical ranking, and transparent performance review.</p><button class="primary" id="hero-start">Explore platform</button></div></section>
-  <section class="features" id="features"><article class="feature"><h3>Adaptive analysis</h3>Frequency, recency, and sequence models in one weighted ranking engine.</article><article class="feature"><h3>Secure workspace</h3>Server-side sessions, role permissions, access expiry, and audit trails.</article><article class="feature"><h3>Manual operations</h3>Owner/CEO dashboard for users, expiry, virtual coins, and access control.</article></section>
-  <main class="app" id="app">
-    <div class="app-head"><div><div class="eyebrow">User workspace</div><h1 style="font-size:34px;margin:8px 0" id="welcome">Dashboard</h1></div><button id="logout">Logout</button></div>
-    <section class="app-panel"><h2>BigSmall analysis</h2><p>Enter results oldest to newest. Predictions are statistical rankings, not guaranteed outcomes.</p><textarea id="history" placeholder="6, 5, 3, 6, 5"></textarea><div class="actions"><button class="primary" id="analyze">Analyze history</button></div><div class="results" id="results"></div></section>
-    <section class="app-panel"><h2>Recent predictions</h2><div class="history" id="prediction-history"></div></section>
+  <section class="auth-screen" id="auth-screen">
+    <h1>Number Predictor</h1>
+    <p>Business account access</p>
+    <div class="auth-tabs">
+      <button type="button" id="login-tab" class="active">Login</button>
+      <button type="button" id="signup-tab">Sign up</button>
+    </div>
+    <form id="auth-form">
+      <div class="field" id="name-field" hidden>
+        <label for="auth-name">Full name</label>
+        <input id="auth-name" autocomplete="name" maxlength="80">
+      </div>
+      <div class="field">
+        <label for="auth-email">Email</label>
+        <input id="auth-email" type="email" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label for="auth-password">Password</label>
+        <input id="auth-password" type="password" autocomplete="current-password" minlength="10" required>
+      </div>
+      <div class="button-row">
+        <button class="primary" id="auth-submit" type="submit">Login</button>
+      </div>
+    </form>
+    <div class="auth-message" id="auth-message" role="alert"></div>
+    <div class="demo-note">Accounts are protected by server-side sessions and require manual access approval.</div>
+  </section>
+
+  <main id="predictor-app" hidden>
+    <div class="account-bar">
+      <div class="account-info">Signed in as <strong id="account-name"></strong><br><span id="account-expiry"></span></div>
+      <div class="account-actions">
+        <button id="logout" type="button">Logout</button>
+      </div>
+    </div>
+    <header>
+      <span class="eyebrow">Number pattern analyzer</span>
+      <h1>Number Predictor</h1>
+      <p>Recent history aur repeat patterns se next numbers rank karo.</p>
+    </header>
+
+    <section class="panel" aria-labelledby="history-title">
+      <h2 class="section-title" id="history-title">1. Past numbers enter karo</h2>
+      <p class="help">0–9 ke maximum 1000 results oldest se newest tak daalo; latest number aakhir mein ho. Example: <strong>6,5,3,6,5,2,8</strong>.</p>
+      <label for="history">Number history (0–9)</label>
+      <textarea id="history" placeholder="Jaise: 6,5,3,6,5" spellcheck="false" autocomplete="off"></textarea>
+      <p class="help" id="history-count" aria-live="polite">0 / 1000 results</p>
+      <div class="number-pad" aria-label="Add a result number">
+        <button type="button" data-number="0" aria-label="Add number 0">0</button>
+        <button type="button" data-number="1" aria-label="Add number 1">1</button>
+        <button type="button" data-number="2" aria-label="Add number 2">2</button>
+        <button type="button" data-number="3" aria-label="Add number 3">3</button>
+        <button type="button" data-number="4" aria-label="Add number 4">4</button>
+        <button type="button" data-number="5" aria-label="Add number 5">5</button>
+        <button type="button" data-number="6" aria-label="Add number 6">6</button>
+        <button type="button" data-number="7" aria-label="Add number 7">7</button>
+        <button type="button" data-number="8" aria-label="Add number 8">8</button>
+        <button type="button" data-number="9" aria-label="Add number 9">9</button>
+      </div>
+      <div class="button-row">
+        <button class="danger" id="clear" type="button">Clear</button>
+      </div>
+      <p class="error" id="error" role="alert" aria-live="polite"></p>
+    </section>
+
+    <section class="panel" aria-labelledby="settings-title">
+      <h2 class="section-title" id="settings-title">2. LCG tools</h2>
+      <p class="help">Pehle jaisa LCG section: normal next, Anti-RNG opposite, aur reverse previous-state ko alag-alag check karo.</p>
+      <div class="legacy-settings">
+        <div>
+          <label for="multiplier">Multiplier (a)</label>
+          <input id="multiplier" type="number" value="21" min="0" step="1">
+          <small>Default: 21</small>
+        </div>
+        <div>
+          <label for="increment">Increment (c)</label>
+          <input id="increment" type="number" value="1" min="0" step="1">
+          <small>Default: 1</small>
+        </div>
+        <div>
+          <label for="modulus">Modulus (m)</label>
+          <input id="modulus" type="number" value="10" min="2" max="10" step="1">
+          <small>WinGo demo range: 0–9</small>
+        </div>
+      </div>
+      <div class="button-row">
+        <button class="primary" id="predict-lcg" type="button">Predict next (LCG)</button>
+        <button id="anti-rng-inline" type="button">Anti-RNG: opposite</button>
+        <button id="reverse-lcg" type="button">Reverse: previous</button>
+      </div>
+      <p class="error" id="lcg-error" role="alert" aria-live="polite"></p>
+    </section>
+
+    <section class="panel result" id="lcg-result" aria-live="polite" aria-labelledby="lcg-result-title">
+      <div class="result-label" id="lcg-result-title">LCG output</div>
+      <div class="legacy-result-number" id="lcg-number"></div>
+      <div class="legacy-answer" id="lcg-big-small"></div>
+      <div class="color-heading">Color</div>
+      <div class="color-tags" id="lcg-colors"></div>
+      <p class="result-meta" id="lcg-meta"></p>
+      <div class="formula" id="lcg-calculation"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="anti-title">
+      <h2 class="section-title" id="anti-title">3. Separate Anti-RNG prediction</h2>
+      <p class="help">Normal LCG result ke opposite number ko alag se calculate karega: (LCG output + 5) mod 10. Yeh local demo calculation hai.</p>
+      <div class="button-row">
+        <button class="primary" id="anti-rng" type="button">Run separate Anti-RNG</button>
+      </div>
+      <p class="error" id="anti-error" role="alert" aria-live="polite"></p>
+    </section>
+
+    <section class="panel result" id="anti-result" aria-live="polite" aria-labelledby="anti-result-title">
+      <div class="result-label" id="anti-result-title">Separate Anti-RNG output</div>
+      <div class="legacy-result-number" id="anti-number"></div>
+      <div class="legacy-answer" id="anti-big-small"></div>
+      <div class="color-heading">Color</div>
+      <div class="color-tags" id="anti-colors"></div>
+      <p class="result-meta" id="anti-meta"></p>
+      <div class="formula" id="anti-calculation"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="pattern-title">
+      <h2 class="section-title" id="pattern-title">4. Adaptive number analysis</h2>
+      <p class="help">Frequency, recency aur Markov sequence models ko past-only walk-forward log-loss se weight karke top numbers rank karta hai.</p>
+      <div class="button-row">
+        <button class="primary" id="predict" type="button">Analyze & rank numbers</button>
+      </div>
+    </section>
+
+    <section class="panel result" id="result" aria-live="polite" aria-labelledby="result-title">
+      <div class="result-label" id="result-title">Top number candidates</div>
+      <div class="candidate-list" id="candidate-list"></div>
+      <p class="result-meta" id="result-meta"></p>
+      <div class="formula" id="calculation"></div>
+      <div class="history-stats" id="history-stats"></div>
+    </section>
+
+    <section class="panel" aria-labelledby="independent-formulas-title">
+      <h2 class="section-title" id="independent-formulas-title">5. Independent formula notes</h2>
+      <p class="help">Yeh formulas alag reference hain. Inka LCG, Anti-RNG, number history, ya pattern ranking se koi connection nahi hai.</p>
+      <div class="formula-grid">
+        <article class="formula-card">
+          <h3>Probability density</h3>
+          <div class="formula-display" aria-label="P equals absolute value of psi squared">P = |ψ|²</div>
+          <p>Quantum mechanics mein ψ wavefunction hai; uska modulus squared probability density deta hai. Actual probability ke liye state ko normalize karke jis region ka chance chahiye, wahan integrate/sum karte hain.</p>
+        </article>
+        <article class="formula-card">
+          <h3>Maximum-likelihood condition</h3>
+          <div class="formula-display" aria-label="Derivative with respect to theta of log likelihood of theta equals zero">∂/∂θ ln L(θ) = 0</div>
+          <p>Yeh differentiable likelihood ke interior maximum ka score equation hai. Isse θ estimate karne ke liye likelihood L(θ), data aur parameter range specify karna zaroori hai; equation akeli unique answer nahi deti.</p>
+        </article>
+      </div>
+    </section>
+
+    <aside class="notice">
+      <strong>Important:</strong> Koi “world’s most accurate” formula guaranteed nahi hota. Adaptive ranking past patterns par based hai; truly random results ko past data se reliably predict nahi kiya ja sakta. Yeh tool external game ke RNG se connected nahi hai. Maximum history: 1000 results.
+    </aside>
   </main>
-  <div class="modal-wrap" id="auth-modal"><div class="modal"><div class="tabs"><button id="login-tab" class="active">Login</button><button id="signup-tab">Sign up</button></div><h2 id="auth-title">Welcome back</h2><form id="auth-form"><div class="field" id="name-field" hidden><label>Full name</label><input id="name" autocomplete="name"></div><div class="field"><label>Email</label><input id="email" type="email" autocomplete="email" required></div><div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password" minlength="10" required></div><button class="primary" type="submit" id="auth-submit">Login</button></form><div class="message" id="auth-message"></div></div></div>
+
   <script>
-    let mode="login";
-    const modal=document.querySelector("#auth-modal");
-    function openAuth(next="login"){mode=next;modal.classList.add("open");setMode(next)}
-    function setMode(next){document.querySelector("#login-tab").classList.toggle("active",next==="login");document.querySelector("#signup-tab").classList.toggle("active",next==="signup");document.querySelector("#name-field").hidden=next==="login";document.querySelector("#auth-title").textContent=next==="login"?"Welcome back":"Create your account";document.querySelector("#auth-submit").textContent=next==="login"?"Login":"Create account"}
-    document.querySelector("#login-button").onclick=()=>openAuth("login");document.querySelector("#signup-button").onclick=()=>openAuth("signup");document.querySelector("#hero-start").onclick=()=>openAuth("signup");
-    document.querySelector("#login-tab").onclick=()=>setMode("login");document.querySelector("#signup-tab").onclick=()=>setMode("signup");modal.onclick=(e)=>{if(e.target===modal)modal.classList.remove("open")};
-    async function request(url,options={}){const response=await fetch(url,{...options,headers:{...options.headers,"Content-Type":"application/json"}});const data=await response.json();if(!response.ok)throw new Error(data.error||"Request failed.");return data}
-    document.querySelector("#auth-form").onsubmit=async(e)=>{e.preventDefault();document.querySelector("#auth-message").textContent="";try{if(mode==="signup"){await request("/api/auth/signup",{method:"POST",body:JSON.stringify({name:document.querySelector("#name").value,email:document.querySelector("#email").value,password:document.querySelector("#password").value})});document.querySelector("#auth-message").style.color="#86efac";document.querySelector("#auth-message").textContent="Account created. Admin approval is required.";return}const data=await request("/api/auth/login",{method:"POST",body:JSON.stringify({email:document.querySelector("#email").value,password:document.querySelector("#password").value})});if(data.user.role==="owner"||data.user.role==="ceo"||data.user.role==="admin"){location.href="/admin";return}openApp(data.user)}catch(error){document.querySelector("#auth-message").style.color="#fda4af";document.querySelector("#auth-message").textContent=error.message}};
-    async function openApp(user){modal.classList.remove("open");document.querySelector("#landing").hidden=true;document.querySelector("#features").hidden=true;document.querySelector("#public-nav").hidden=true;document.querySelector("#app").classList.add("visible");document.querySelector("#welcome").textContent=`Welcome, ${user.name}`;loadHistory()}
-    async function loadHistory(){try{const data=await request("/api/predictions");document.querySelector("#prediction-history").innerHTML=data.predictions.length?data.predictions.map(item=>`<div class="history-row"><span>${item.candidates.map(c=>c.number).join(", ")}</span><span>${new Date(item.created_at).toLocaleString()}</span></div>`).join(""):'<p>No prediction history yet.</p>'}catch(error){document.querySelector("#prediction-history").textContent=error.message}}
-    document.querySelector("#analyze").onclick=async()=>{const button=document.querySelector("#analyze");button.disabled=true;button.textContent="Analyzing…";try{const data=await request("/api/predict",{method:"POST",body:JSON.stringify({history:document.querySelector("#history").value})});document.querySelector("#results").innerHTML=data.candidates.map((c,i)=>`<div class="candidate"><small>Rank ${i+1}</small><br><strong>${c.number}</strong><br><small>${Math.round(c.score*100)}%</small></div>`).join("");loadHistory()}catch(error){alert(error.message)}finally{button.disabled=false;button.textContent="Analyze history"}};
-    document.querySelector("#logout").onclick=async()=>{await request("/api/auth/logout",{method:"POST",body:"{}"});location.reload()};
-    (async()=>{try{const data=await request("/api/me");openApp(data.user)}catch{}})();
+    let saasAuthMode = "login";
+
+    function showAuth() {
+      document.querySelector("#auth-screen").hidden = false;
+      document.querySelector("#predictor-app").hidden = true;
+    }
+
+    function openSignedInApp(user) {
+      document.querySelector("#auth-screen").hidden = true;
+      document.querySelector("#predictor-app").hidden = false;
+      document.querySelector("#account-name").textContent = user.name || user.email;
+      document.querySelector("#account-expiry").textContent = `Access valid until: ${user.expiresAt || "Not set"}`;
+    }
+
+    async function api(path, options = {}) {
+      const response = await fetch(path, {
+        ...options,
+        headers: { "Content-Type": "application/json", ...(options.headers || {}) }
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Request failed.");
+      return data;
+    }
+
+    async function login(email, password) {
+      const data = await api("/api/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password })
+      });
+      const user = data.user;
+      if (["owner", "admin", "ceo"].includes(user.role)) {
+        window.location.href = "admin.html";
+        return;
+      }
+      openSignedInApp(user);
+    }
+
+    document.querySelector("#login-tab").addEventListener("click", () => {
+      saasAuthMode = "login";
+      document.querySelector("#login-tab").classList.add("active");
+      document.querySelector("#signup-tab").classList.remove("active");
+      document.querySelector("#name-field").hidden = true;
+      document.querySelector("#auth-submit").textContent = "Login";
+      document.querySelector("#auth-password").autocomplete = "current-password";
+      document.querySelector("#auth-message").textContent = "";
+    });
+    document.querySelector("#signup-tab").addEventListener("click", () => {
+      saasAuthMode = "signup";
+      document.querySelector("#signup-tab").classList.add("active");
+      document.querySelector("#login-tab").classList.remove("active");
+      document.querySelector("#name-field").hidden = false;
+      document.querySelector("#auth-submit").textContent = "Create account";
+      document.querySelector("#auth-password").autocomplete = "new-password";
+      document.querySelector("#auth-message").textContent = "";
+    });
+    document.querySelector("#auth-form").addEventListener("submit", (event) => {
+      event.preventEventDefault?.();
+      event.preventDefault();
+      const email = document.querySelector("#auth-email").value.trim().toLowerCase();
+      const password = document.querySelector("#auth-password").value;
+      const name = document.querySelector("#auth-name").value.trim();
+      try {
+        if (saasAuthMode === "signup") {
+          if (!name) throw new Error("Full name enter karo.");
+          await api("/api/auth/signup", {
+            method: "POST",
+            body: JSON.stringify({ name, email, password })
+          });
+          document.querySelector("#auth-message").style.color = "#6ee7a1";
+          document.querySelector("#auth-message").textContent = "Account ban gaya. Admin manual payment confirm karke access enable karega.";
+          document.querySelector("#auth-form").reset();
+          return;
+        }
+        await login(email, password);
+      } catch (error) {
+        document.querySelector("#auth-message").style.color = "#fca5a5";
+        document.querySelector("#auth-message").textContent = error.message;
+      }
+    });
+    document.querySelector("#logout").addEventListener("click", async () => {
+      try { await api("/api/auth/logout", { method: "POST", body: "{}" }); } catch {}
+      showAuth();
+    });
+
+    api("/api/me")
+      .then((data) => {
+        if (["owner", "admin", "ceo"].includes(data.user.role)) window.location.href = "admin.html";
+        else openSignedInApp(data.user);
+      })
+      .catch(showAuth);
+
+    const historyInput = document.querySelector("#history");
+    const errorOutput = document.querySelector("#error");
+    const result = document.querySelector("#result");
+    const lcgErrorOutput = document.querySelector("#lcg-error");
+    const lcgResult = document.querySelector("#lcg-result");
+
+    function parseHistory(value) {
+      const input = value.trim();
+      if (!input) return [];
+      const tokens = input.split(/[\s,;|]+/).filter(Boolean);
+      if (tokens.length > 1000) {
+        throw new Error("Maximum 1000 results allowed. History se kuch numbers hatao.");
+      }
+      const numbers = tokens.map((token) => {
+        if (!/^\d$/.test(token)) {
+          throw new Error(`"${token}" valid nahi hai. Sirf 0 se 9 tak ke numbers daalo.`);
+        }
+        return Number(token);
+      });
+      return numbers;
+    }
+
+    function modulo(value, modulus) {
+      return ((value % modulus) + modulus) % modulus;
+    }
+
+    function modularInverse(value, modulus) {
+      let oldR = value;
+      let r = modulus;
+      let oldS = 1n;
+      let s = 0n;
+      while (r !== 0n) {
+        const quotient = oldR / r;
+        [oldR, r] = [r, oldR - quotient * r];
+        [oldS, s] = [s, oldS - quotient * s];
+      }
+      return oldR === 1n ? modulo(oldS, modulus) : null;
+    }
+
+    function lcgNext(seed, a, c, m) {
+      return Number(modulo(BigInt(a) * BigInt(seed) + BigInt(c), BigInt(m)));
+    }
+
+    function lcgPrevious(seed, a, c, m) {
+      const modulus = BigInt(m);
+      const inverse = modularInverse(BigInt(a), modulus);
+      if (inverse === null) {
+        throw new Error("Reverse ke liye a aur m coprime hone chahiye. Is multiplier se previous state calculate nahi ho sakta.");
+      }
+      return Number(modulo(inverse * (BigInt(seed) - BigInt(c)), modulus));
+    }
+
+    function colorsFor(number) {
+      if (number === 0) return ["Red", "Violet"];
+      if (number === 5) return ["Green", "Violet"];
+      return [number % 2 === 0 ? "Red" : "Green"];
+    }
+
+    function runLcg(direction, prefix = "lcg") {
+      const errorOutput = document.querySelector(`#${prefix}-error`);
+      const resultOutput = document.querySelector(`#${prefix}-result`);
+      const getOutput = (suffix) => document.querySelector(`#${prefix}-${suffix}`);
+      errorOutput.textContent = "";
+      resultOutput.classList.remove("visible");
+      try {
+        const history = parseHistory(historyInput.value);
+        if (history.length === 0) {
+          throw new Error("Pehle history mein kam se kam ek number daalo.");
+        }
+        const a = Number(document.querySelector("#multiplier").value);
+        const c = Number(document.querySelector("#increment").value);
+        const m = Number(document.querySelector("#modulus").value);
+        if (![a, c, m].every(Number.isSafeInteger) || a < 0 || c < 0 || m !== 10) {
+          throw new Error("a aur c non-negative whole numbers hone chahiye; is game demo ke liye m = 10 rakho.");
+        }
+
+        const seed = history[history.length - 1];
+        const normal = lcgNext(seed, a, c, m);
+        const output = direction === "reverse"
+          ? lcgPrevious(seed, a, c, m)
+          : direction === "anti"
+            ? Number(modulo(BigInt(normal) + 5n, BigInt(m)))
+            : normal;
+        const bigSmall = output >= 5 ? "BIG" : "SMALL";
+        const colors = colorsFor(output);
+        const numberElement = getOutput("number");
+        numberElement.textContent = String(output);
+        numberElement.style.color = output === 0 || output === 5
+          ? "#c266fa"
+          : output % 2 === 0 ? "#ff555f" : "#31c475";
+        const bigSmallElement = getOutput("big-small");
+        bigSmallElement.textContent = bigSmall;
+        bigSmallElement.className = `legacy-answer ${bigSmall.toLowerCase()}`;
+        getOutput("colors").innerHTML = colors
+          .map((color) => `<span class="color-tag ${color.toLowerCase()}">${color}</span>`)
+          .join("");
+        getOutput("result-title").textContent =
+          direction === "anti" ? "Anti-RNG opposite output"
+            : direction === "reverse" ? "Previous LCG output" : "Next LCG output";
+        getOutput("meta").textContent =
+          `${direction === "anti" ? `LCG output ${normal} → opposite ${output}` : `Seed ${seed} → ${direction === "reverse" ? "previous" : "next"} ${output}`} · ${bigSmall} · ${colors.join(" + ")}`;
+        getOutput("calculation").textContent =
+          direction === "anti"
+            ? `Normal: (${a} × ${seed} + ${c}) mod ${m} = ${normal}  ·  Anti: (${normal} + 5) mod ${m} = ${output}`
+            : direction === "reverse"
+              ? `a⁻¹ × (seed − c) mod m = ${output}  ·  Previous state before ${seed}`
+              : `(${a} × ${seed} + ${c}) mod ${m} = ${output}`;
+        resultOutput.classList.add("visible");
+      } catch (error) {
+        errorOutput.textContent = error.message;
+      }
+    }
+
+    function normalizeScores(scores) {
+      const total = scores.reduce((sum, score) => sum + score, 0);
+      return scores.map((score) => score / total);
+    }
+
+    function expertPredictions(history) {
+      const frequency = Array(10).fill(1);
+      history.forEach((number) => { frequency[number] += 1; });
+
+      const recency = Array(10).fill(0.5);
+      history.slice(-30).forEach((number, index, recent) => {
+        recency[number] += 0.9 ** (recent.length - index - 1);
+      });
+
+      const base = normalizeScores(frequency);
+      const markov = [...base];
+      const latest = history[history.length - 1];
+      const previous = history.length > 1 ? history[history.length - 2] : null;
+      const oneStep = Array(10).fill(0);
+      const twoStep = Array(10).fill(0);
+
+      for (let index = 1; index < history.length; index += 1) {
+        if (history[index - 1] === latest) oneStep[history[index]] += 1;
+        if (previous !== null && index >= 2
+          && history[index - 2] === previous
+          && history[index - 1] === latest) {
+          twoStep[history[index]] += 1;
+        }
+      }
+
+      const oneTotal = oneStep.reduce((sum, count) => sum + count, 0);
+      const twoTotal = twoStep.reduce((sum, count) => sum + count, 0);
+      for (let number = 0; number < 10; number += 1) {
+        const oneProbability = (oneStep[number] + 4 * base[number]) / (oneTotal + 4);
+        const twoProbability = (twoStep[number] + 4 * base[number]) / (twoTotal + 4);
+        markov[number] = 0.35 * base[number] + 0.25 * oneProbability + 0.4 * twoProbability;
+      }
+
+      return [
+        base,
+        normalizeScores(recency),
+        normalizeScores(markov)
+      ];
+    }
+
+    function adaptivePrediction(history) {
+      const modelCount = 3;
+      const losses = Array(modelCount).fill(0);
+      const validationStart = Math.max(5, history.length - 30);
+      let validationCount = 0;
+
+      for (let index = validationStart; index < history.length; index += 1) {
+        const prior = history.slice(0, index);
+        const predictions = expertPredictions(prior);
+        const actual = history[index];
+        predictions.forEach((prediction, modelIndex) => {
+          losses[modelIndex] -= Math.log(Math.max(prediction[actual], 1e-9));
+        });
+        validationCount += 1;
+      }
+
+      const weights = losses.map((loss) =>
+        validationCount === 0 ? 1 : Math.exp(-2 * loss / validationCount));
+      const weightTotal = weights.reduce((sum, weight) => sum + weight, 0);
+      const currentPredictions = expertPredictions(history);
+      const combined = Array(10).fill(0);
+      currentPredictions.forEach((prediction, modelIndex) => {
+        for (let number = 0; number < 10; number += 1) {
+          combined[number] += prediction[number] * weights[modelIndex] / weightTotal;
+        }
+      });
+
+      return combined
+        .map((score, number) => ({ number, score }))
+        .sort((left, right) => right.score - left.score || left.number - right.number);
+    }
+
+    function runWalkForwardTest(history) {
+      const firstTestIndex = 6;
+      let topOneHits = 0;
+      let topThreeHits = 0;
+      let tests = 0;
+
+      for (let index = firstTestIndex; index < history.length; index += 1) {
+        const ranked = adaptivePrediction(history.slice(0, index));
+        const actual = history[index];
+        if (ranked[0].number === actual) topOneHits += 1;
+        if (ranked.slice(0, 3).some((candidate) => candidate.number === actual)) topThreeHits += 1;
+        tests += 1;
+      }
+      return { tests, topOneHits, topThreeHits };
+    }
+
+    function predict() {
+      errorOutput.textContent = "";
+      result.classList.remove("visible");
+      try {
+        const history = parseHistory(historyInput.value);
+        if (history.length < 3) {
+          throw new Error("Analysis ke liye kam se kam 3 past numbers daalo.");
+        }
+
+        const ranked = adaptivePrediction(history);
+        const topScore = ranked[0].score;
+        document.querySelector("#candidate-list").innerHTML = ranked.slice(0, 3)
+          .map((candidate, index) => {
+            const relativeScore = Math.round((candidate.score / topScore) * 100);
+            return `<div class="candidate"><span class="candidate-rank">Rank ${index + 1}</span><strong>${candidate.number}</strong><span class="candidate-score">Relative score ${relativeScore}</span></div>`;
+          })
+          .join("");
+        document.querySelector("#result-meta").textContent =
+          `Top-ranked number: ${ranked[0].number}. Ranking is based on ${history.length} entered results.`;
+        document.querySelector("#calculation").textContent =
+          "Adaptive ensemble: smoothed frequency + recency-weighted frequency + 1/2-step Markov; model weights use past-only log-loss.";
+        const backtest = runWalkForwardTest(history);
+        document.querySelector("#history-stats").textContent = backtest.tests === 0
+          ? "Walk-forward test ke liye kam se kam 7 results chahiye."
+          : `Past-only walk-forward: top-1 ${backtest.topOneHits}/${backtest.tests} (${Math.round(100 * backtest.topOneHits / backtest.tests)}%; random baseline 10%); top-3 ${backtest.topThreeHits}/${backtest.tests} (${Math.round(100 * backtest.topThreeHits / backtest.tests)}%; random baseline 30%). Past sample hai, future accuracy nahi.`;
+        result.classList.add("visible");
+      } catch (error) {
+        errorOutput.textContent = error.message;
+      }
+    }
+
+    document.querySelector("#predict-lcg").addEventListener("click", () => runLcg("forward"));
+    document.querySelector("#anti-rng-inline").addEventListener("click", () => runLcg("anti"));
+    document.querySelector("#anti-rng").addEventListener("click", () => runLcg("anti", "anti"));
+    document.querySelector("#reverse-lcg").addEventListener("click", () => runLcg("reverse"));
+    document.querySelector("#predict").addEventListener("click", predict);
+    document.querySelectorAll("[data-number]").forEach((button) => {
+      button.addEventListener("click", () => {
+        let currentHistory;
+        try {
+          currentHistory = parseHistory(historyInput.value);
+        } catch (error) {
+          errorOutput.textContent = error.message;
+          return;
+        }
+        if (currentHistory.length >= 1000) {
+          errorOutput.textContent = "Maximum 1000 results allowed.";
+          return;
+        }
+        historyInput.value += `${historyInput.value.trim() ? ", " : ""}${button.dataset.number}`;
+        errorOutput.textContent = "";
+        updateHistoryCount();
+      });
+    });
+
+    function updateHistoryCount() {
+      const tokens = historyInput.value.trim().split(/[\s,;|]+/).filter(Boolean);
+      document.querySelector("#history-count").textContent = `${tokens.length} / 1000 results`;
+      if (tokens.length > 1000) {
+        errorOutput.textContent = "Maximum 1000 results allowed. History se kuch numbers hatao.";
+      } else if (errorOutput.textContent.startsWith("Maximum 1000 results")) {
+        errorOutput.textContent = "";
+      }
+    }
+
+    historyInput.addEventListener("input", updateHistoryCount);
+    updateHistoryCount();
+    document.querySelector("#clear").addEventListener("click", () => {
+      historyInput.value = "";
+      errorOutput.textContent = "";
+      result.classList.remove("visible");
+      lcgResult.classList.remove("visible");
+      document.querySelector("#anti-result").classList.remove("visible");
+      lcgErrorOutput.textContent = "";
+      document.querySelector("#anti-error").textContent = "";
+      updateHistoryCount();
+      historyInput.focus();
+    });
+    historyInput.addEventListener("keydown", (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === "Enter") predict();
+    });
   </script>
 </body>
 </html>
