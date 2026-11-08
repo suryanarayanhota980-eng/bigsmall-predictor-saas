@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: bigsmall-predictor
+    runtime: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: OWNER_EMAIL
+        sync: false
+      - key: OWNER_PASSWORD
+        sync: false
+    disk:
+      name: bigsmall-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1

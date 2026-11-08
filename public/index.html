@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090b14"><title>BigSmall Predictor</title>
+  <style>
+    :root{color-scheme:dark;--bg:#090b14;--panel:#121521;--line:#272b40;--muted:#969bb2;--purple:#8b5cf6;--cyan:#52d3d8;font-family:Inter,ui-sans-serif,system-ui,sans-serif}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 70% -10%,rgba(139,92,246,.18),transparent 35%),var(--bg);color:#f7f8ff}button,input{font:inherit}
+    .nav{height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 max(24px,6vw);border-bottom:1px solid rgba(255,255,255,.07)}
+    .brand{font-weight:850;letter-spacing:-.03em}.brand span{color:#a78bfa}.nav-actions{display:flex;gap:10px}
+    button{min-height:42px;padding:0 16px;border:1px solid var(--line);border-radius:11px;background:#191c2b;color:white;font-weight:750;cursor:pointer}
+    .primary{border:0;background:linear-gradient(115deg,#7655ef,#a66df0);box-shadow:0 12px 35px rgba(118,85,239,.22)}
+    .hero{min-height:520px;display:grid;place-items:center;text-align:center;padding:70px 20px}.hero-inner{max-width:780px}
+    .eyebrow{color:#bba8ff;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+    h1{margin:18px 0;font-size:clamp(48px,8vw,86px);line-height:.96;letter-spacing:-.055em}.gradient{background:linear-gradient(120deg,#fff,#aaa3ff 45%,#67dbe2);background-clip:text;color:transparent}
+    .hero p{max-width:650px;margin:20px auto 28px;color:#aaafc5;font-size:18px;line-height:1.7}.features{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1050px;margin:0 auto 80px;padding:0 20px}
+    .feature,.modal,.app-panel{border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,rgba(25,28,43,.94),rgba(15,17,29,.94));box-shadow:0 24px 80px rgba(0,0,0,.22)}
+    .feature{padding:24px;color:#aeb2c7}.feature h3{color:white;margin-top:0}
+    .modal-wrap{position:fixed;inset:0;display:none;place-items:center;padding:20px;background:rgba(3,4,10,.78);backdrop-filter:blur(12px)}.modal-wrap.open{display:grid}
+    .modal{width:min(100%,430px);padding:26px}.modal h2{margin-top:0}.field{margin-top:14px}label{display:block;margin-bottom:7px;font-size:13px;font-weight:700;color:#d7d9e8}
+    input{width:100%;height:44px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:#0c0e18;color:white;outline:none}.modal .primary{width:100%;margin-top:18px}
+    .tabs{display:grid;grid-template-columns:1fr 1fr;margin-bottom:18px}.tabs button.active{border-color:#8b5cf6;background:rgba(139,92,246,.13)}.message{min-height:20px;color:#fda4af;font-size:13px;margin-top:12px}
+    .app{display:none;max-width:900px;margin:0 auto;padding:28px 20px}.app.visible{display:block}.app-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px}
+    .app-panel{padding:24px;margin-top:16px}.app-panel p{color:var(--muted)}textarea{width:100%;min-height:95px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#0c0e18;color:white;font:inherit;resize:vertical}
+    .actions{display:flex;gap:10px;margin-top:12px}.results{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}.candidate{padding:18px;border:1px solid var(--line);border-radius:12px;text-align:center}.candidate strong{font-size:36px;color:#c4b5fd}
+    .history{margin-top:12px}.history-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);color:var(--muted)}
+    @media(max-width:700px){.features{grid-template-columns:1fr}.hero{min-height:480px}.actions{flex-direction:column}.results{grid-template-columns:1fr}.nav{padding:0 16px}.nav-actions button{padding:0 12px}}
+  </style>
+</head>
+<body>
+  <nav class="nav" id="public-nav"><div class="brand">BIG<span>SMALL</span> <small>PREMIUM</small></div><div class="nav-actions"><button id="login-button">Login</button><button class="primary" id="signup-button">Get access</button></div></nav>
+  <section class="hero" id="landing"><div class="hero-inner"><div class="eyebrow">Pattern intelligence platform</div><h1>Turn past results into <span class="gradient">clear insight.</span></h1><p>A secure SaaS workspace for organized history analysis, statistical ranking, and transparent performance review.</p><button class="primary" id="hero-start">Explore platform</button></div></section>
+  <section class="features" id="features"><article class="feature"><h3>Adaptive analysis</h3>Frequency, recency, and sequence models in one weighted ranking engine.</article><article class="feature"><h3>Secure workspace</h3>Server-side sessions, role permissions, access expiry, and audit trails.</article><article class="feature"><h3>Manual operations</h3>Owner/CEO dashboard for users, expiry, virtual coins, and access control.</article></section>
+  <main class="app" id="app">
+    <div class="app-head"><div><div class="eyebrow">User workspace</div><h1 style="font-size:34px;margin:8px 0" id="welcome">Dashboard</h1></div><button id="logout">Logout</button></div>
+    <section class="app-panel"><h2>BigSmall analysis</h2><p>Enter results oldest to newest. Predictions are statistical rankings, not guaranteed outcomes.</p><textarea id="history" placeholder="6, 5, 3, 6, 5"></textarea><div class="actions"><button class="primary" id="analyze">Analyze history</button></div><div class="results" id="results"></div></section>
+    <section class="app-panel"><h2>Recent predictions</h2><div class="history" id="prediction-history"></div></section>
+  </main>
+  <div class="modal-wrap" id="auth-modal"><div class="modal"><div class="tabs"><button id="login-tab" class="active">Login</button><button id="signup-tab">Sign up</button></div><h2 id="auth-title">Welcome back</h2><form id="auth-form"><div class="field" id="name-field" hidden><label>Full name</label><input id="name" autocomplete="name"></div><div class="field"><label>Email</label><input id="email" type="email" autocomplete="email" required></div><div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password" minlength="10" required></div><button class="primary" type="submit" id="auth-submit">Login</button></form><div class="message" id="auth-message"></div></div></div>
+  <script>
+    let mode="login";
+    const modal=document.querySelector("#auth-modal");
+    function openAuth(next="login"){mode=next;modal.classList.add("open");setMode(next)}
+    function setMode(next){document.querySelector("#login-tab").classList.toggle("active",next==="login");document.querySelector("#signup-tab").classList.toggle("active",next==="signup");document.querySelector("#name-field").hidden=next==="login";document.querySelector("#auth-title").textContent=next==="login"?"Welcome back":"Create your account";document.querySelector("#auth-submit").textContent=next==="login"?"Login":"Create account"}
+    document.querySelector("#login-button").onclick=()=>openAuth("login");document.querySelector("#signup-button").onclick=()=>openAuth("signup");document.querySelector("#hero-start").onclick=()=>openAuth("signup");
+    document.querySelector("#login-tab").onclick=()=>setMode("login");document.querySelector("#signup-tab").onclick=()=>setMode("signup");modal.onclick=(e)=>{if(e.target===modal)modal.classList.remove("open")};
+    async function request(url,options={}){const response=await fetch(url,{...options,headers:{...options.headers,"Content-Type":"application/json"}});const data=await response.json();if(!response.ok)throw new Error(data.error||"Request failed.");return data}
+    document.querySelector("#auth-form").onsubmit=async(e)=>{e.preventDefault();document.querySelector("#auth-message").textContent="";try{if(mode==="signup"){await request("/api/auth/signup",{method:"POST",body:JSON.stringify({name:document.querySelector("#name").value,email:document.querySelector("#email").value,password:document.querySelector("#password").value})});document.querySelector("#auth-message").style.color="#86efac";document.querySelector("#auth-message").textContent="Account created. Admin approval is required.";return}const data=await request("/api/auth/login",{method:"POST",body:JSON.stringify({email:document.querySelector("#email").value,password:document.querySelector("#password").value})});if(data.user.role==="owner"||data.user.role==="ceo"||data.user.role==="admin"){location.href="/admin";return}openApp(data.user)}catch(error){document.querySelector("#auth-message").style.color="#fda4af";document.querySelector("#auth-message").textContent=error.message}};
+    async function openApp(user){modal.classList.remove("open");document.querySelector("#landing").hidden=true;document.querySelector("#features").hidden=true;document.querySelector("#public-nav").hidden=true;document.querySelector("#app").classList.add("visible");document.querySelector("#welcome").textContent=`Welcome, ${user.name}`;loadHistory()}
+    async function loadHistory(){try{const data=await request("/api/predictions");document.querySelector("#prediction-history").innerHTML=data.predictions.length?data.predictions.map(item=>`<div class="history-row"><span>${item.candidates.map(c=>c.number).join(", ")}</span><span>${new Date(item.created_at).toLocaleString()}</span></div>`).join(""):'<p>No prediction history yet.</p>'}catch(error){document.querySelector("#prediction-history").textContent=error.message}}
+    document.querySelector("#analyze").onclick=async()=>{const button=document.querySelector("#analyze");button.disabled=true;button.textContent="Analyzing…";try{const data=await request("/api/predict",{method:"POST",body:JSON.stringify({history:document.querySelector("#history").value})});document.querySelector("#results").innerHTML=data.candidates.map((c,i)=>`<div class="candidate"><small>Rank ${i+1}</small><br><strong>${c.number}</strong><br><small>${Math.round(c.score*100)}%</small></div>`).join("");loadHistory()}catch(error){alert(error.message)}finally{button.disabled=false;button.textContent="Analyze history"}};
+    document.querySelector("#logout").onclick=async()=>{await request("/api/auth/logout",{method:"POST",body:"{}"});location.reload()};
+    (async()=>{try{const data=await request("/api/me");openApp(data.user)}catch{}})();
+  </script>
+</body>
+</html>
