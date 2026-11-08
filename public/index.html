@@ -398,7 +398,7 @@
       document.querySelector("#auth-password").autocomplete = "new-password";
       document.querySelector("#auth-message").textContent = "";
     });
-    document.querySelector("#auth-form").addEventListener("submit", (event) => {
+    document.querySelector("#auth-form").addEventListener("submit", async (event) => {
       event.preventEventDefault?.();
       event.preventDefault();
       const email = document.querySelector("#auth-email").value.trim().toLowerCase();
